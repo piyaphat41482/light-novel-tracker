@@ -1,29 +1,23 @@
-import { useEffect, useState } from 'react'
-import { supabase } from '@/lib/supabase'
-import { Button } from '@/components/ui/button'
+// จุดตั้งค่า routing หลักของแอปทั้งหมด
+// กำหนดว่า URL ไหน แสดง component ไหน
+
+import { Routes, Route } from 'react-router-dom'
+import Layout from '@/components/layout/Layout'
+import DashboardPage from '@/pages/DashboardPage'
+import CollectionPage from '@/pages/CollectionPage'
+import WishlistPage from '@/pages/WishlistPage'
+import StatisticsPage from '@/pages/StatisticsPage'
 
 function App() {
-  const [status, setStatus] = useState('กำลังเชื่อมต่อ...')
-
-  useEffect(() => {
-    async function testConnection() {
-      const { error } = await supabase.from('_test').select('*').limit(1)
-      // เราคาดว่าจะ error เพราะยังไม่มีตาราง _test อยู่จริง
-      // แต่ถ้า error message เป็นเรื่อง "ไม่พบตาราง" แปลว่าเชื่อมต่อกับ Supabase สำเร็จแล้ว
-      if (error) {
-        setStatus(`เชื่อมต่อสำเร็จ! (error ที่เห็นคือ: ${error.message})`)
-      } else {
-        setStatus('เชื่อมต่อสำเร็จ!')
-      }
-    }
-    testConnection()
-  }, [])
-
   return (
-    <div className="min-h-screen bg-slate-900 flex flex-col items-center justify-center gap-4">
-      <h1 className="text-2xl font-bold text-white">{status}</h1>
-      <Button>ทดสอบปุ่ม shadcn</Button>
-    </div>
+    <Routes>
+      <Route path="/" element={<Layout />}>
+        <Route index element={<DashboardPage />} />
+        <Route path="collection" element={<CollectionPage />} />
+        <Route path="wishlist" element={<WishlistPage />} />
+        <Route path="statistics" element={<StatisticsPage />} />
+      </Route>
+    </Routes>
   )
 }
 
