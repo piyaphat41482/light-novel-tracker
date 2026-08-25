@@ -2,12 +2,13 @@
 // ตามที่คุยกันใน Phase 4 - นิ้วโป้งเอื้อมด้านล่างจอง่ายกว่า
 
 import { NavLink } from 'react-router-dom'
-import { LayoutDashboard, Library, Heart, BarChart3 } from 'lucide-react'
+import { LayoutDashboard, Library, Search, Heart, BarChart3 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
 const navItems = [
   { to: '/', label: 'หน้าแรก', icon: LayoutDashboard },
   { to: '/collection', label: 'คอลเลกชัน', icon: Library },
+  { to: '/search', label: 'ค้นหา', icon: Search },
   { to: '/wishlist', label: 'อยากได้', icon: Heart },
   { to: '/statistics', label: 'สถิติ', icon: BarChart3 },
 ]
