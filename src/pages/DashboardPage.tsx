@@ -5,6 +5,8 @@ import { fetchAllSeries } from '@/lib/queries/series'
 import { calculateDashboardStats } from '@/lib/seriesHelpers'
 import StatCard from '@/components/dashboard/StatCard'
 import SeriesCard from '@/components/series/SeriesCard'
+import StatCardSkeleton from '@/components/dashboard/StatCardSkeleton'
+import SeriesCardSkeleton from '@/components/series/SeriesCardSkeleton'
 
 export default function DashboardPage() {
   const {
@@ -17,9 +19,26 @@ export default function DashboardPage() {
   })
 
   // สถานะกำลังโหลด - แสดงข้อความง่ายๆ ไปก่อน (Phase 8 จะทำ skeleton loading ให้สวยขึ้น)
-  if (isLoading) {
-    return <div className="p-8 text-slate-400">กำลังโหลดข้อมูล...</div>
-  }
+if (isLoading) {
+  return (
+    <div className="p-4 md:p-8">
+      <h1 className="text-2xl font-bold text-white mb-6">Dashboard</h1>
+
+      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3 mb-8">
+        {Array.from({ length: 6 }).map((_, i) => (
+          <StatCardSkeleton key={i} />
+        ))}
+      </div>
+
+      <h2 className="text-lg font-semibold text-white mb-3">Recently Added</h2>
+      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
+        {Array.from({ length: 5 }).map((_, i) => (
+          <SeriesCardSkeleton key={i} />
+        ))}
+      </div>
+    </div>
+  )
+}
 
   // สถานะ error - ดึงข้อมูลไม่สำเร็จ
   if (error) {

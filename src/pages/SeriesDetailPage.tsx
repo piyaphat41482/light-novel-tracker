@@ -11,6 +11,7 @@ import {
   calculateCompletionPercent,
 } from '@/lib/seriesHelpers'
 import VolumeChecklist from '@/components/series/VolumeChecklist'
+import { Skeleton } from '@/components/ui/skeleton'
 
 export default function SeriesDetailPage() {
   const { id } = useParams<{ id: string }>()
@@ -37,9 +38,26 @@ export default function SeriesDetailPage() {
     },
   })
 
-  if (isLoading) {
-    return <div className="p-8 text-slate-400">กำลังโหลดข้อมูล...</div>
-  }
+if (isLoading) {
+  return (
+    <div className="p-4 md:p-8 md:grid md:grid-cols-[280px_1fr] md:gap-8">
+      <div>
+        <Skeleton className="aspect-[2/3] rounded-xl mb-4" />
+        <Skeleton className="h-9 w-full rounded-lg" />
+      </div>
+      <div className="mt-6 md:mt-0 space-y-3">
+        <Skeleton className="h-8 w-2/3" />
+        <Skeleton className="h-4 w-1/3" />
+        <Skeleton className="h-2 w-full rounded-full mt-4" />
+        <div className="flex flex-wrap gap-2 mt-6">
+          {Array.from({ length: 8 }).map((_, i) => (
+            <Skeleton key={i} className="h-9 w-20 rounded-lg" />
+          ))}
+        </div>
+      </div>
+    </div>
+  )
+}
 
   if (error || !series) {
     return (

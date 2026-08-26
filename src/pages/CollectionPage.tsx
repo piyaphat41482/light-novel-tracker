@@ -14,6 +14,7 @@ import {
   countOwnedVolumes,
   calculateCompletionPercent,
 } from '@/lib/seriesHelpers'
+import SeriesCardSkeleton from '@/components/series/SeriesCardSkeleton'
 
 export default function CollectionPage() {
   const [mediaFilter, setMediaFilter] = useState<MediaFilter>('all')
@@ -58,9 +59,20 @@ export default function CollectionPage() {
     return sorted
   }, [seriesList, mediaFilter, sortBy])
 
-  if (isLoading) {
-    return <div className="p-8 text-slate-400">กำลังโหลดข้อมูล...</div>
-  }
+if (isLoading) {
+  return (
+    <div className="p-4 md:p-8">
+      <div className="flex items-center justify-between mb-6">
+        <h1 className="text-2xl font-bold text-white">Collection</h1>
+      </div>
+      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
+        {Array.from({ length: 12 }).map((_, i) => (
+          <SeriesCardSkeleton key={i} />
+        ))}
+      </div>
+    </div>
+  )
+}
 
   if (error) {
     return <div className="p-8 text-red-400">เกิดข้อผิดพลาด: {error.message}</div>
