@@ -1,28 +1,47 @@
-// หน้ารายละเอียดซีรีส์ - หน้าที่สำคัญที่สุดของแอปตาม use case หลัก
-// แสดงข้อมูลครบถ้วน + Volume Checklist ที่กดแก้ไขได้ทันที
+// หน้ารายละเอียดซีรีส์ - ตอนนี้ดึงข้อมูลจริงจาก Supabase และบันทึกการ toggle เล่มถาวรแล้ว
 
-import { useState } from 'react'
 import { useParams, Link } from 'react-router-dom'
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { ArrowLeft, Heart, Pencil } from 'lucide-react'
-import { mockSeries } from '@/data/mockSeries'
+import { fetchSeriesById } from '@/lib/queries/series'
+import { toggleVolumeOwned } from '@/lib/mutations/volumes'
 import {
   countOwnedVolumes,
   countTotalVolumes,
   calculateCompletionPercent,
 } from '@/lib/seriesHelpers'
 import VolumeChecklist from '@/components/series/VolumeChecklist'
-import type { Volume } from '@/types/database'
 
 export default function SeriesDetailPage() {
   const { id } = useParams<{ id: string }>()
-  const series = mockSeries.find((s) => s.id === id)
+  const queryClient = useQueryClient()
 
-  // เก็บ state ของเล่มไว้แยกต่างหาก เพื่อให้ toggle แล้วหน้าจออัปเดตทันที
-  // เริ่มต้นจากข้อมูลของ series ที่เจอ (หรือ array ว่างถ้าหาไม่เจอ)
-  const [volumes, setVolumes] = useState<Volume[]>(series?.volumes ?? [])
+  const {
+    data: series,
+    isLoading,
+    error,
+  } = useQuery({
+    queryKey: ['series', id], // queryKey มี id ต่อท้าย เพราะแต่ละซีรีส์ต้องแยก cache กัน
+    queryFn: () => fetchSeriesById(id!),
+    enabled: !!id, // ไม่ต้องรัน query เลยถ้ายังไม่มี id (ป้องกันเรียกตอน id เป็น undefined)
+  })
 
-  // ถ้าหา series ตาม id ไม่เจอเลย (เช่น URL พิมพ์ผิด หรือถูกลบไปแล้ว)
-  if (!series) {
+  // ตั้งค่า mutation สำหรับ toggle เล่ม
+  const toggleMutation = useMutation({
+    mutationFn: ({ volumeId, newValue }: { volumeId: string; newValue: boolean }) =>
+      toggleVolumeOwned(volumeId, newValue),
+    onSuccess: () => {
+      // บอก TanStack Query ว่า cache ของ series ทั้งหมดเก่าแล้ว ให้โหลดใหม่
+      // ครอบคลุมทั้งหน้านี้ (series detail), Dashboard, และ Collection ที่ใช้ queryKey ['series'] ร่วมกัน
+      queryClient.invalidateQueries({ queryKey: ['series'] })
+    },
+  })
+
+  if (isLoading) {
+    return <div className="p-8 text-slate-400">กำลังโหลดข้อมูล...</div>
+  }
+
+  if (error || !series) {
     return (
       <div className="p-8 text-center">
         <p className="text-slate-400 mb-4">ไม่พบซีรีส์ที่ต้องการ</p>
@@ -34,30 +53,28 @@ export default function SeriesDetailPage() {
   }
 
   function handleToggleVolume(volumeId: string) {
-    setVolumes((prev) =>
-      prev.map((v) => (v.id === volumeId ? { ...v, is_owned: !v.is_owned } : v))
-    )
+    const volume = series!.volumes?.find((v) => v.id === volumeId)
+    if (!volume) return
+    toggleMutation.mutate({ volumeId, newValue: !volume.is_owned })
   }
 
-  const owned = countOwnedVolumes({ ...series, volumes })
-  const total = countTotalVolumes({ ...series, volumes })
-  const percent = calculateCompletionPercent({ ...series, volumes })
+  const owned = countOwnedVolumes(series)
+  const total = countTotalVolumes(series)
+  const percent = calculateCompletionPercent(series)
   const title = series.title_english || series.title_original || series.title_thai
 
   return (
     <div className="pb-8">
-      {/* แถบบนสุด: ปุ่มย้อนกลับ + แก้ไข */}
       <div className="sticky top-0 bg-slate-900/95 backdrop-blur border-b border-slate-800 px-4 py-3 flex items-center justify-between z-10">
         <Link to="/collection" className="text-slate-400 hover:text-white">
           <ArrowLeft size={20} />
         </Link>
         <Link to={`/series/${series.id}/edit`} className="text-slate-400 hover:text-white">
-            <Pencil size={20} />
+          <Pencil size={20} />
         </Link>
       </div>
 
       <div className="p-4 md:p-8 md:grid md:grid-cols-[280px_1fr] md:gap-8">
-        {/* คอลัมน์ซ้าย: ปก + ข้อมูลพื้นฐาน (บนเดสก์ท็อป) */}
         <div>
           <div className="aspect-[2/3] bg-slate-800 rounded-xl overflow-hidden mb-4">
             {series.cover_image_url ? (
@@ -74,12 +91,14 @@ export default function SeriesDetailPage() {
           </div>
 
           <button className="w-full flex items-center justify-center gap-2 py-2 rounded-lg border border-slate-700 text-slate-300 hover:bg-slate-800 mb-4">
-            <Heart size={16} className={series.is_favorite ? 'fill-red-400 text-red-400' : ''} />
+            <Heart
+              size={16}
+              className={series.is_favorite ? 'fill-red-400 text-red-400' : ''}
+            />
             {series.is_favorite ? 'อยู่ในรายการโปรด' : 'เพิ่มในรายการโปรด'}
           </button>
         </div>
 
-        {/* คอลัมน์ขวา: ชื่อเรื่อง + checklist + รายละเอียด */}
         <div className="mt-6 md:mt-0">
           <h1 className="text-2xl font-bold text-white mb-1">{title}</h1>
           {series.title_original && series.title_original !== title && (
@@ -89,7 +108,6 @@ export default function SeriesDetailPage() {
             <p className="text-slate-400 text-sm mb-4">{series.publisher.name}</p>
           )}
 
-          {/* Progress bar */}
           <div className="w-full h-2 bg-slate-800 rounded-full overflow-hidden mb-2">
             <div
               className="h-full bg-emerald-500 rounded-full transition-all"
@@ -100,11 +118,20 @@ export default function SeriesDetailPage() {
             มี {owned} จาก {total} เล่ม ({percent}%)
           </p>
 
-          {/* Volume Checklist - ส่วนสำคัญที่สุด อยู่สูงในหน้าจอตามที่ออกแบบไว้ */}
           <h2 className="text-lg font-semibold text-white mb-3">รายการเล่ม</h2>
-          <VolumeChecklist volumes={volumes} onToggleVolume={handleToggleVolume} />
+          <VolumeChecklist
+            volumes={series.volumes ?? []}
+            onToggleVolume={handleToggleVolume}
+          />
+          {toggleMutation.isPending && (
+            <p className="text-slate-500 text-xs mt-2">กำลังบันทึก...</p>
+          )}
+          {toggleMutation.isError && (
+            <p className="text-red-400 text-xs mt-2">
+              บันทึกไม่สำเร็จ: {toggleMutation.error.message}
+            </p>
+          )}
 
-          {/* รายละเอียดเพิ่มเติม - อยู่ล่างสุด เพราะเช็คไม่บ่อยเท่า checklist */}
           {series.synopsis && (
             <div className="mt-8">
               <h2 className="text-lg font-semibold text-white mb-2">เรื่องย่อ</h2>
