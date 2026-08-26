@@ -8,6 +8,7 @@ import AddSeriesPage from '@/pages/AddSeriesPage'
 import EditSeriesPage from '@/pages/EditSeriesPage'
 import WishlistPage from '@/pages/WishlistPage'
 import StatisticsPage from '@/pages/StatisticsPage'
+import SettingsPage from '@/pages/SettingsPage'
 
 function App() {
   return (
@@ -21,6 +22,7 @@ function App() {
         <Route path="series/:id/edit" element={<EditSeriesPage />} />
         <Route path="wishlist" element={<WishlistPage />} />
         <Route path="statistics" element={<StatisticsPage />} />
+        <Route path="settings" element={<SettingsPage />} />
       </Route>
     </Routes>
   )

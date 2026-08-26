@@ -2,7 +2,14 @@
 // ใช้ NavLink แทน Link ธรรมดา เพราะ NavLink บอกได้ว่า "อยู่หน้านี้อยู่หรือเปล่า" ทำให้ไฮไลต์เมนูที่เลือกอยู่ได้
 
 import { NavLink } from 'react-router-dom'
-import { LayoutDashboard, Library, Search, Heart, BarChart3 } from 'lucide-react'
+import {
+  LayoutDashboard,
+  Library,
+  Search,
+  Heart,
+  BarChart3,
+  Settings,
+} from 'lucide-react'
 import { cn } from '@/lib/utils'
 
 const navItems = [
@@ -11,6 +18,7 @@ const navItems = [
   { to: '/search', label: 'Search', icon: Search },
   { to: '/wishlist', label: 'Wishlist', icon: Heart },
   { to: '/statistics', label: 'Statistics', icon: BarChart3 },
+  { to: '/settings', label: 'Settings', icon: Settings },
 ]
 
 export default function Sidebar() {
