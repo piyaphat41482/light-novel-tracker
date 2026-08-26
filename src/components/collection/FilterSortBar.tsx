@@ -30,7 +30,12 @@ export default function FilterSortBar({
 }: FilterSortBarProps) {
   return (
     <div className="flex flex-wrap items-center gap-3 mb-6">
-      <Select value={mediaFilter} onValueChange={onMediaFilterChange}>
+<Select
+  value={mediaFilter}
+  onValueChange={(value) => {
+    if (value !== null) onMediaFilterChange(value)
+  }}
+>
         <SelectTrigger className="w-36 bg-slate-800 border-slate-700 text-white">
           <SelectValue placeholder="ประเภท" />
         </SelectTrigger>
@@ -41,7 +46,12 @@ export default function FilterSortBar({
         </SelectContent>
       </Select>
 
-      <Select value={sortBy} onValueChange={onSortByChange}>
+<Select
+  value={sortBy}
+  onValueChange={(value) => {
+    if (value !== null) onSortByChange(value)
+  }}
+>
         <SelectTrigger className="w-44 bg-slate-800 border-slate-700 text-white">
           <SelectValue placeholder="เรียงตาม" />
         </SelectTrigger>
