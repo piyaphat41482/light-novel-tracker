@@ -2,6 +2,8 @@
 // ใช้ mock data ไปก่อน จะเปลี่ยนเป็นข้อมูลจริงจาก Supabase ใน milestone หลังจากนี้
 
 import { useState, useMemo } from 'react'
+import { Link } from 'react-router-dom'
+import { Plus } from 'lucide-react'
 import { mockSeries } from '@/data/mockSeries'
 import SeriesCard from '@/components/series/SeriesCard'
 import FilterSortBar, {
@@ -54,15 +56,16 @@ export default function CollectionPage() {
 
   return (
     <div className="p-4 md:p-8">
-      <h1 className="text-2xl font-bold text-white mb-6">Collection</h1>
-
-      <FilterSortBar
-        mediaFilter={mediaFilter}
-        onMediaFilterChange={setMediaFilter}
-        sortBy={sortBy}
-        onSortByChange={setSortBy}
-        resultCount={filteredAndSorted.length}
-      />
+        <div className="flex items-center justify-between mb-6">
+            <h1 className="text-2xl font-bold text-white">Collection</h1>
+                <Link
+                    to="/series/new"
+                    className="flex items-center gap-1.5 bg-emerald-600 hover:bg-emerald-500 text-white text-sm font-medium px-3 py-2 rounded-lg transition-colors"
+                >
+                    <Plus size={16} />
+                        เพิ่มซีรีส์
+                </Link>
+        </div>
 
       {filteredAndSorted.length === 0 ? (
         <p className="text-slate-400 text-center py-12">

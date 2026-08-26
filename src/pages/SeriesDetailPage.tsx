@@ -51,9 +51,9 @@ export default function SeriesDetailPage() {
         <Link to="/collection" className="text-slate-400 hover:text-white">
           <ArrowLeft size={20} />
         </Link>
-        <button className="text-slate-400 hover:text-white">
-          <Pencil size={20} />
-        </button>
+        <Link to={`/series/${series.id}/edit`} className="text-slate-400 hover:text-white">
+            <Pencil size={20} />
+        </Link>
       </div>
 
       <div className="p-4 md:p-8 md:grid md:grid-cols-[280px_1fr] md:gap-8">
