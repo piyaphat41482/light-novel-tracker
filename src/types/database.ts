@@ -49,3 +49,15 @@ export interface Series {
   created_at: string
   updated_at: string
 }
+
+export interface WishlistItem {
+  id: string
+  series_id: string
+  series?: Series // ข้อมูลซีรีส์ที่ join มาด้วย
+  priority: WishlistPriority
+  estimated_price: number | null
+  preferred_store: string | null
+  reminder_date: string | null
+  notes: string | null
+  created_at: string
+}
