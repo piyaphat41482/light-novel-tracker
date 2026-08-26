@@ -62,3 +62,41 @@ export function calculateDashboardStats(seriesList: Series[]) {
     wishlistCount,
   }
 }
+
+// จัดกลุ่มจำนวนซีรีส์ตามสำนักพิมพ์ สำหรับกราฟวงกลม
+export function groupByPublisher(seriesList: Series[]) {
+  const counts = new Map<string, number>()
+
+  for (const series of seriesList) {
+    const name = series.publisher?.name ?? 'ไม่ระบุ'
+    counts.set(name, (counts.get(name) ?? 0) + 1)
+  }
+
+  return Array.from(counts.entries()).map(([name, value]) => ({ name, value }))
+}
+
+// จัดกลุ่มจำนวนซีรีส์ตามแนวเรื่อง (genre) สำหรับกราฟวงกลม
+export function groupByGenre(seriesList: Series[]) {
+  const counts = new Map<string, number>()
+
+  for (const series of seriesList) {
+    // ตอนนี้ series ยังไม่มี field genres ใน mock data
+    // เราจะใช้ media_type แทนไปก่อน (เดี๋ยวเปลี่ยนเป็น genre จริงตอนเชื่อม Supabase)
+    const label = series.media_type === 'manga' ? 'มังงะ' : 'ไลท์โนเวล'
+    counts.set(label, (counts.get(label) ?? 0) + 1)
+  }
+
+  return Array.from(counts.entries()).map(([name, value]) => ({ name, value }))
+}
+
+// รวมยอด owned vs missing ทั้งคอลเลกชัน สำหรับกราฟแท่ง
+export function getOwnedVsMissingData(seriesList: Series[]) {
+  const owned = seriesList.reduce((sum, s) => sum + countOwnedVolumes(s), 0)
+  const total = seriesList.reduce((sum, s) => sum + countTotalVolumes(s), 0)
+  const missing = total - owned
+
+  return [
+    { name: 'มีแล้ว', value: owned },
+    { name: 'ยังขาด', value: missing },
+  ]
+}
