@@ -23,6 +23,9 @@ interface SeriesFormProps {
   submitLabel: string
 }
 
+const inputClass = 'bg-slate-800 border-slate-700 text-white'
+const labelClass = 'text-slate-300'
+
 export default function SeriesForm({
   defaultValues,
   onSubmit,
@@ -39,8 +42,6 @@ export default function SeriesForm({
     defaultValues,
   })
 
-  // ต้องใช้ watch + setValue คู่กันสำหรับ component ที่ไม่ใช่ <input> ธรรมดา
-  // (Select, Switch ของ shadcn ไม่รองรับ register() ตรงๆ)
   const mediaType = watch('media_type')
   const publicationStatus = watch('publication_status')
   const readingStatus = watch('reading_status')
@@ -51,33 +52,51 @@ export default function SeriesForm({
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-5 max-w-xl">
       {/* ชื่อเรื่อง 3 ภาษา */}
       <div className="space-y-2">
-        <Label htmlFor="title_english">ชื่อภาษาอังกฤษ</Label>
-        <Input id="title_english" {...register('title_english')} />
+        <Label htmlFor="title_english" className={labelClass}>
+          ชื่อภาษาอังกฤษ
+        </Label>
+        <Input
+          id="title_english"
+          className={inputClass}
+          {...register('title_english')}
+        />
         {errors.title_english && (
           <p className="text-red-400 text-sm">{errors.title_english.message}</p>
         )}
       </div>
 
       <div className="space-y-2">
-        <Label htmlFor="title_original">ชื่อภาษาญี่ปุ่น</Label>
-        <Input id="title_original" {...register('title_original')} />
+        <Label htmlFor="title_original" className={labelClass}>
+          ชื่อภาษาญี่ปุ่น
+        </Label>
+        <Input
+          id="title_original"
+          className={inputClass}
+          {...register('title_original')}
+        />
       </div>
 
       <div className="space-y-2">
-        <Label htmlFor="title_thai">ชื่อภาษาไทย</Label>
-        <Input id="title_thai" {...register('title_thai')} />
+        <Label htmlFor="title_thai" className={labelClass}>
+          ชื่อภาษาไทย
+        </Label>
+        <Input
+          id="title_thai"
+          className={inputClass}
+          {...register('title_thai')}
+        />
       </div>
 
       {/* ประเภท */}
       <div className="space-y-2">
-        <Label>ประเภท *</Label>
+        <Label className={labelClass}>ประเภท *</Label>
         <Select
           value={mediaType}
           onValueChange={(value) =>
             setValue('media_type', value as SeriesFormValues['media_type'])
           }
         >
-          <SelectTrigger>
+          <SelectTrigger className={inputClass}>
             <SelectValue placeholder="เลือกประเภท" />
           </SelectTrigger>
           <SelectContent>
@@ -92,7 +111,7 @@ export default function SeriesForm({
 
       {/* สถานะการตีพิมพ์ */}
       <div className="space-y-2">
-        <Label>สถานะการตีพิมพ์</Label>
+        <Label className={labelClass}>สถานะการตีพิมพ์</Label>
         <Select
           value={publicationStatus}
           onValueChange={(value) =>
@@ -102,7 +121,7 @@ export default function SeriesForm({
             )
           }
         >
-          <SelectTrigger>
+          <SelectTrigger className={inputClass}>
             <SelectValue />
           </SelectTrigger>
           <SelectContent>
@@ -115,14 +134,14 @@ export default function SeriesForm({
 
       {/* สถานะการอ่าน */}
       <div className="space-y-2">
-        <Label>สถานะการอ่านของฉัน</Label>
+        <Label className={labelClass}>สถานะการอ่านของฉัน</Label>
         <Select
           value={readingStatus}
           onValueChange={(value) =>
             setValue('reading_status', value as SeriesFormValues['reading_status'])
           }
         >
-          <SelectTrigger>
+          <SelectTrigger className={inputClass}>
             <SelectValue />
           </SelectTrigger>
           <SelectContent>
@@ -135,10 +154,13 @@ export default function SeriesForm({
 
       {/* เล่มล่าสุด */}
       <div className="space-y-2">
-        <Label htmlFor="latest_volume">เล่มล่าสุดที่วางขาย</Label>
+        <Label htmlFor="latest_volume" className={labelClass}>
+          เล่มล่าสุดที่วางขาย
+        </Label>
         <Input
           id="latest_volume"
           type="number"
+          className={inputClass}
           {...register('latest_volume', { valueAsNumber: true })}
         />
         {errors.latest_volume && (
@@ -148,16 +170,26 @@ export default function SeriesForm({
 
       {/* เรื่องย่อ */}
       <div className="space-y-2">
-        <Label htmlFor="synopsis">เรื่องย่อ</Label>
-        <Textarea id="synopsis" rows={4} {...register('synopsis')} />
+        <Label htmlFor="synopsis" className={labelClass}>
+          เรื่องย่อ
+        </Label>
+        <Textarea
+          id="synopsis"
+          rows={4}
+          className={inputClass}
+          {...register('synopsis')}
+        />
       </div>
 
       {/* ลิงก์รูปปก */}
       <div className="space-y-2">
-        <Label htmlFor="cover_image_url">ลิงก์รูปปก</Label>
+        <Label htmlFor="cover_image_url" className={labelClass}>
+          ลิงก์รูปปก
+        </Label>
         <Input
           id="cover_image_url"
           placeholder="https://..."
+          className={inputClass}
           {...register('cover_image_url')}
         />
         {errors.cover_image_url && (
@@ -172,19 +204,34 @@ export default function SeriesForm({
 
       {/* เก็บไว้ที่ */}
       <div className="space-y-2">
-        <Label htmlFor="storage_location">เก็บไว้ที่</Label>
-        <Input id="storage_location" {...register('storage_location')} />
+        <Label htmlFor="storage_location" className={labelClass}>
+          เก็บไว้ที่
+        </Label>
+        <Input
+          id="storage_location"
+          className={inputClass}
+          {...register('storage_location')}
+        />
       </div>
 
       {/* โน้ต */}
       <div className="space-y-2">
-        <Label htmlFor="notes">โน้ตส่วนตัว</Label>
-        <Textarea id="notes" rows={3} {...register('notes')} />
+        <Label htmlFor="notes" className={labelClass}>
+          โน้ตส่วนตัว
+        </Label>
+        <Textarea
+          id="notes"
+          rows={3}
+          className={inputClass}
+          {...register('notes')}
+        />
       </div>
 
       {/* Toggle switches */}
       <div className="flex items-center justify-between">
-        <Label htmlFor="is_favorite">รายการโปรด</Label>
+        <Label htmlFor="is_favorite" className={labelClass}>
+          รายการโปรด
+        </Label>
         <Switch
           id="is_favorite"
           checked={isFavorite}
@@ -193,7 +240,9 @@ export default function SeriesForm({
       </div>
 
       <div className="flex items-center justify-between">
-        <Label htmlFor="is_wishlist">อยากได้ (Wishlist)</Label>
+        <Label htmlFor="is_wishlist" className={labelClass}>
+          อยากได้ (Wishlist)
+        </Label>
         <Switch
           id="is_wishlist"
           checked={isWishlist}
