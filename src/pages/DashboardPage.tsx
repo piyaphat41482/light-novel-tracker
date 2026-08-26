@@ -87,11 +87,17 @@ if (error) {
             ยังไม่มีซีรีส์ในคอลเลกชัน ลองเพิ่มซีรีส์แรกดูสิ
           </p>
         ) : (
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
-            {recentlyAdded.map((series) => (
-              <SeriesCard key={series.id} series={series} />
-            ))}
-          </div>
+<div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
+  {recentlyAdded.map((series, index) => (
+    <div
+      key={series.id}
+      style={{ animationDelay: `${index * 50}ms` }}
+      className="animate-in fade-in slide-in-from-bottom-2 duration-300 fill-mode-both"
+    >
+      <SeriesCard series={series} />
+    </div>
+  ))}
+</div>
         )}
       </section>
     </div>
