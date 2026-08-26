@@ -1,10 +1,10 @@
-// หน้า Wishlist - แสดงรายการที่อยากได้ เรียงตามความสำคัญก่อนเสมอ
+// หน้า Wishlist - ดึงข้อมูลจริงจาก Supabase
 
-import { mockWishlist } from '@/data/mockWishlist'
+import { useQuery } from '@tanstack/react-query'
+import { fetchWishlist } from '@/lib/queries/wishlist'
 import WishlistItemCard from '@/components/wishlist/WishlistItemCard'
 import type { WishlistPriority } from '@/types/database'
 
-// กำหนดลำดับความสำคัญไว้เป็นตัวเลข เพื่อใช้เรียงลำดับ (high ต้องมาก่อนเสมอ)
 const priorityOrder: Record<WishlistPriority, number> = {
   high: 0,
   medium: 1,
@@ -12,7 +12,20 @@ const priorityOrder: Record<WishlistPriority, number> = {
 }
 
 export default function WishlistPage() {
-  const sortedWishlist = [...mockWishlist].sort(
+  const { data: wishlist, isLoading, error } = useQuery({
+    queryKey: ['wishlist'],
+    queryFn: fetchWishlist,
+  })
+
+  if (isLoading) {
+    return <div className="p-8 text-slate-400">กำลังโหลดข้อมูล...</div>
+  }
+
+  if (error) {
+    return <div className="p-8 text-red-400">เกิดข้อผิดพลาด: {error.message}</div>
+  }
+
+  const sortedWishlist = [...(wishlist ?? [])].sort(
     (a, b) => priorityOrder[a.priority] - priorityOrder[b.priority]
   )
 
