@@ -15,6 +15,7 @@ import {
   calculateCompletionPercent,
 } from '@/lib/seriesHelpers'
 import SeriesCardSkeleton from '@/components/series/SeriesCardSkeleton'
+import ErrorState from '@/components/ui/error-state'
 
 export default function CollectionPage() {
   const [mediaFilter, setMediaFilter] = useState<MediaFilter>('all')
@@ -22,10 +23,10 @@ export default function CollectionPage() {
 
   // ใช้ queryKey เดียวกับ Dashboard ('series') - TanStack Query จะใช้ cache ร่วมกัน
   // ถ้าเพิ่งเปิด Dashboard มาก่อน หน้านี้จะโหลดเร็วมากเพราะมีข้อมูลอยู่ใน cache แล้ว
-  const { data: seriesList, isLoading, error } = useQuery({
-    queryKey: ['series'],
-    queryFn: fetchAllSeries,
-  })
+ const { data: seriesList, isLoading, error, refetch } = useQuery({
+  queryKey: ['series'],
+  queryFn: fetchAllSeries,
+})
 
   const filteredAndSorted = useMemo(() => {
     const series = seriesList ?? []
@@ -74,9 +75,9 @@ if (isLoading) {
   )
 }
 
-  if (error) {
-    return <div className="p-8 text-red-400">เกิดข้อผิดพลาด: {error.message}</div>
-  }
+if (error) {
+  return <ErrorState message={error.message} onRetry={() => refetch()} />
+}
 
   return (
     <div className="p-4 md:p-8">

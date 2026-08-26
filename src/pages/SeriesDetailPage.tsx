@@ -12,20 +12,22 @@ import {
 } from '@/lib/seriesHelpers'
 import VolumeChecklist from '@/components/series/VolumeChecklist'
 import { Skeleton } from '@/components/ui/skeleton'
+import ErrorState from '@/components/ui/error-state'
 
 export default function SeriesDetailPage() {
   const { id } = useParams<{ id: string }>()
   const queryClient = useQueryClient()
 
-  const {
-    data: series,
-    isLoading,
-    error,
-  } = useQuery({
-    queryKey: ['series', id], // queryKey มี id ต่อท้าย เพราะแต่ละซีรีส์ต้องแยก cache กัน
-    queryFn: () => fetchSeriesById(id!),
-    enabled: !!id, // ไม่ต้องรัน query เลยถ้ายังไม่มี id (ป้องกันเรียกตอน id เป็น undefined)
-  })
+const {
+  data: series,
+  isLoading,
+  error,
+  refetch,
+} = useQuery({
+  queryKey: ['series', id],
+  queryFn: () => fetchSeriesById(id!),
+  enabled: !!id,
+})
 
   // ตั้งค่า mutation สำหรับ toggle เล่ม
   const toggleMutation = useMutation({
@@ -59,16 +61,20 @@ if (isLoading) {
   )
 }
 
-  if (error || !series) {
-    return (
-      <div className="p-8 text-center">
-        <p className="text-slate-400 mb-4">ไม่พบซีรีส์ที่ต้องการ</p>
-        <Link to="/collection" className="text-emerald-400 hover:underline">
-          กลับไปหน้า Collection
-        </Link>
-      </div>
-    )
-  }
+if (error) {
+  return <ErrorState message={error.message} onRetry={() => refetch()} />
+}
+
+if (!series) {
+  return (
+    <div className="p-8 text-center">
+      <p className="text-slate-400 mb-4">ไม่พบซีรีส์ที่ต้องการ</p>
+      <Link to="/collection" className="text-emerald-400 hover:underline">
+        กลับไปหน้า Collection
+      </Link>
+    </div>
+  )
+}
 
   function handleToggleVolume(volumeId: string) {
     const volume = series!.volumes?.find((v) => v.id === volumeId)

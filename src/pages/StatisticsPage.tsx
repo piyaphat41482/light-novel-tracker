@@ -10,20 +10,21 @@ import {
 import PublisherChart from '@/components/statistics/PublisherChart'
 import GenreChart from '@/components/statistics/GenreChart'
 import CompletionChart from '@/components/statistics/CompletionChart'
+import ErrorState from '@/components/ui/error-state'
 
 export default function StatisticsPage() {
-  const { data: seriesList, isLoading, error } = useQuery({
-    queryKey: ['series'],
-    queryFn: fetchAllSeries,
-  })
+const { data: seriesList, isLoading, error, refetch } = useQuery({
+  queryKey: ['series'],
+  queryFn: fetchAllSeries,
+})
 
   if (isLoading) {
     return <div className="p-8 text-slate-400">กำลังโหลดข้อมูล...</div>
   }
 
-  if (error) {
-    return <div className="p-8 text-red-400">เกิดข้อผิดพลาด: {error.message}</div>
-  }
+if (error) {
+  return <ErrorState message={error.message} onRetry={() => refetch()} />
+}
 
   const series = seriesList ?? []
   const publisherData = groupByPublisher(series)

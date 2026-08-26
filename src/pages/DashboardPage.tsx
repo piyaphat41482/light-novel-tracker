@@ -7,16 +7,18 @@ import StatCard from '@/components/dashboard/StatCard'
 import SeriesCard from '@/components/series/SeriesCard'
 import StatCardSkeleton from '@/components/dashboard/StatCardSkeleton'
 import SeriesCardSkeleton from '@/components/series/SeriesCardSkeleton'
+import ErrorState from '@/components/ui/error-state'
 
 export default function DashboardPage() {
-  const {
-    data: seriesList,
-    isLoading,
-    error,
-  } = useQuery({
-    queryKey: ['series'],
-    queryFn: fetchAllSeries,
-  })
+const {
+  data: seriesList,
+  isLoading,
+  error,
+  refetch,
+} = useQuery({
+  queryKey: ['series'],
+  queryFn: fetchAllSeries,
+})
 
   // สถานะกำลังโหลด - แสดงข้อความง่ายๆ ไปก่อน (Phase 8 จะทำ skeleton loading ให้สวยขึ้น)
 if (isLoading) {
@@ -41,13 +43,9 @@ if (isLoading) {
 }
 
   // สถานะ error - ดึงข้อมูลไม่สำเร็จ
-  if (error) {
-    return (
-      <div className="p-8 text-red-400">
-        เกิดข้อผิดพลาด: {error.message}
-      </div>
-    )
-  }
+if (error) {
+  return <ErrorState message={error.message} onRetry={() => refetch()} />
+}
 
   const series = seriesList ?? []
   const stats = calculateDashboardStats(series)

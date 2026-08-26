@@ -4,6 +4,7 @@ import { useQuery } from '@tanstack/react-query'
 import { fetchWishlist } from '@/lib/queries/wishlist'
 import WishlistItemCard from '@/components/wishlist/WishlistItemCard'
 import type { WishlistPriority } from '@/types/database'
+import ErrorState from '@/components/ui/error-state'
 
 const priorityOrder: Record<WishlistPriority, number> = {
   high: 0,
@@ -12,19 +13,18 @@ const priorityOrder: Record<WishlistPriority, number> = {
 }
 
 export default function WishlistPage() {
-  const { data: wishlist, isLoading, error } = useQuery({
-    queryKey: ['wishlist'],
-    queryFn: fetchWishlist,
-  })
+const { data: wishlist, isLoading, error, refetch } = useQuery({
+  queryKey: ['wishlist'],
+  queryFn: fetchWishlist,
+})
 
   if (isLoading) {
     return <div className="p-8 text-slate-400">กำลังโหลดข้อมูล...</div>
   }
 
-  if (error) {
-    return <div className="p-8 text-red-400">เกิดข้อผิดพลาด: {error.message}</div>
-  }
-
+if (error) {
+  return <ErrorState message={error.message} onRetry={() => refetch()} />
+}
   const sortedWishlist = [...(wishlist ?? [])].sort(
     (a, b) => priorityOrder[a.priority] - priorityOrder[b.priority]
   )
