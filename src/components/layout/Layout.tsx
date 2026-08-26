@@ -8,7 +8,7 @@ import BottomNav from './BottomNav'
 
 export default function Layout() {
   return (
-    <div className="min-h-screen bg-slate-900">
+<div className="min-h-screen bg-white dark:bg-slate-900 transition-colors">
       <Sidebar />
 
       {/* md:pl-56 = เว้นพื้นที่ด้านซ้ายให้ Sidebar บนจอกว้าง ไม่ทับเนื้อหา */}

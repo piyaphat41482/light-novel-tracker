@@ -23,8 +23,8 @@ const navItems = [
 
 export default function Sidebar() {
   return (
-    <aside className="hidden md:flex md:w-56 md:flex-col md:fixed md:inset-y-0 bg-slate-950 border-r border-slate-800 p-4">
-      <h2 className="text-lg font-bold text-white mb-6 px-2">
+<aside className="hidden md:flex md:w-56 md:flex-col md:fixed md:inset-y-0 bg-slate-50 dark:bg-slate-950 border-r border-slate-200 dark:border-slate-800 p-4 transition-colors">
+  <h2 className="text-lg font-bold text-slate-900 dark:text-white mb-6 px-2">
         📚 My Collection
       </h2>
       <nav className="flex flex-col gap-1">
@@ -37,8 +37,8 @@ export default function Sidebar() {
               cn(
                 'flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-colors',
                 isActive
-                  ? 'bg-slate-800 text-white'
-                  : 'text-slate-400 hover:bg-slate-900 hover:text-white'
+  ? 'bg-slate-200 dark:bg-slate-800 text-slate-900 dark:text-white'
+  : 'text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-900 hover:text-slate-900 dark:hover:text-white'
               )
             }
           >

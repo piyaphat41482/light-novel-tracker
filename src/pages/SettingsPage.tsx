@@ -2,12 +2,12 @@
 // หมายเหตุ: การสลับ dark/light mode จริงจะทำใน Phase 8 (Polish)
 // ตอนนี้เป็นแค่ UI แสดงตำแหน่งไว้ก่อน
 
-import { useState } from 'react'
 import { Moon, Info, Database, ExternalLink } from 'lucide-react'
 import { Switch } from '@/components/ui/switch'
+import { useTheme } from '@/hooks/useTheme'
 
 export default function SettingsPage() {
-  const [darkMode, setDarkMode] = useState(true)
+  const { theme, toggleTheme } = useTheme()
 
   return (
     <div className="p-4 md:p-8 max-w-xl">
@@ -23,12 +23,12 @@ export default function SettingsPage() {
               <Moon size={18} className="text-slate-400" />
               <div>
                 <p className="text-white text-sm font-medium">โหมดมืด</p>
-                <p className="text-slate-500 text-xs">
-                  ระบบสลับธีมเต็มรูปแบบจะพร้อมใช้งานเร็วๆ นี้
-                </p>
+<p className="text-slate-500 text-xs">
+  ตอนนี้ใช้: {theme === 'dark' ? 'โหมดมืด' : 'โหมดสว่าง'}
+</p>
               </div>
             </div>
-            <Switch checked={darkMode} onCheckedChange={setDarkMode} />
+<Switch checked={theme === 'dark'} onCheckedChange={toggleTheme} />
           </div>
         </div>
       </section>
