@@ -1,5 +1,5 @@
 // การ์ดแสดงซีรีส์หนึ่งเรื่อง ใช้ซ้ำได้ทั้งหน้า Dashboard และ Collection
-// ตามดีไซน์ที่วางแผนไว้ใน Phase 4: ปก, ชื่อ, สำนักพิมพ์, progress bar, badge สถานะ
+// รองรับทั้ง dark และ light mode
 
 import { Link } from 'react-router-dom'
 import { motion } from 'framer-motion'
@@ -28,10 +28,9 @@ export default function SeriesCard({ series }: SeriesCardProps) {
     >
       <Link
         to={`/series/${series.id}`}
-        className="block bg-slate-800 rounded-xl overflow-hidden hover:bg-slate-750 transition-colors border border-slate-700"
+        className="block bg-slate-100 dark:bg-slate-800 rounded-xl overflow-hidden hover:bg-slate-200 dark:hover:bg-slate-750 transition-colors border border-slate-200 dark:border-slate-700"
       >
-        {/* ปกหนังสือ - ถ้ายังไม่มีรูป แสดงกรอบสีพื้นแทน */}
-        <div className="aspect-[2/3] bg-slate-700 flex items-center justify-center">
+        <div className="aspect-[2/3] bg-slate-200 dark:bg-slate-700 flex items-center justify-center">
           {series.cover_image_url ? (
             <img
               src={series.cover_image_url}
@@ -39,20 +38,19 @@ export default function SeriesCard({ series }: SeriesCardProps) {
               className="w-full h-full object-cover"
             />
           ) : (
-            <span className="text-slate-500 text-sm">ไม่มีรูปปก</span>
+            <span className="text-slate-400 dark:text-slate-500 text-sm">ไม่มีรูปปก</span>
           )}
         </div>
 
         <div className="p-3">
-          <h3 className="text-white font-semibold text-sm line-clamp-2 mb-1">
+          <h3 className="text-slate-900 dark:text-white font-semibold text-sm line-clamp-2 mb-1">
             {title}
           </h3>
           {series.publisher && (
-            <p className="text-slate-400 text-xs mb-2">{series.publisher.name}</p>
+            <p className="text-slate-500 dark:text-slate-400 text-xs mb-2">{series.publisher.name}</p>
           )}
 
-          {/* Progress bar */}
-          <div className="w-full h-1.5 bg-slate-700 rounded-full overflow-hidden mb-1">
+          <div className="w-full h-1.5 bg-slate-200 dark:bg-slate-700 rounded-full overflow-hidden mb-1">
             <div
               className="h-full bg-emerald-500 rounded-full transition-all"
               style={{ width: `${percent}%` }}
@@ -60,10 +58,10 @@ export default function SeriesCard({ series }: SeriesCardProps) {
           </div>
 
           <div className="flex justify-between items-center text-xs">
-            <span className="text-slate-300">
+            <span className="text-slate-700 dark:text-slate-300">
               {owned}/{total}
             </span>
-            <span className="text-slate-400">{percent}%</span>
+            <span className="text-slate-500 dark:text-slate-400">{percent}%</span>
           </div>
         </div>
       </Link>
