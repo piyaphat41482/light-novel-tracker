@@ -12,9 +12,9 @@ createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <ThemeProvider>
       <QueryClientProvider client={queryClient}>
-        <BrowserRouter>
-          <App />
-        </BrowserRouter>
+      <BrowserRouter basename="/light-novel-tracker/">
+        <App />
+      </BrowserRouter>
       </QueryClientProvider>
     </ThemeProvider>
   </StrictMode>,
