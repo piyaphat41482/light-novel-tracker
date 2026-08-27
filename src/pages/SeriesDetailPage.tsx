@@ -89,18 +89,18 @@ if (!series) {
 
   return (
     <div className="pb-8">
-      <div className="sticky top-0 bg-slate-900/95 backdrop-blur border-b border-slate-800 px-4 py-3 flex items-center justify-between z-10">
-        <Link to="/collection" className="text-slate-400 hover:text-white">
-          <ArrowLeft size={20} />
-        </Link>
-        <Link to={`/series/${series.id}/edit`} className="text-slate-400 hover:text-white">
-          <Pencil size={20} />
-        </Link>
-      </div>
+<div className="sticky top-0 bg-white/95 dark:bg-slate-900/95 backdrop-blur border-b border-slate-200 dark:border-slate-800 px-4 py-3 flex items-center justify-between z-10">
+  <Link to="/collection" className="text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white">
+    <ArrowLeft size={20} />
+  </Link>
+  <Link to={`/series/${series.id}/edit`} className="text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white">
+    <Pencil size={20} />
+  </Link>
+</div>
 
       <div className="p-4 md:p-8 md:grid md:grid-cols-[280px_1fr] md:gap-8">
         <div>
-          <div className="aspect-[2/3] bg-slate-800 rounded-xl overflow-hidden mb-4">
+          <div className="aspect-[2/3] bg-slate-200 dark:bg-slate-800 rounded-xl overflow-hidden mb-4">
             {series.cover_image_url ? (
               <img
                 src={series.cover_image_url}
@@ -108,13 +108,13 @@ if (!series) {
                 className="w-full h-full object-cover"
               />
             ) : (
-              <div className="w-full h-full flex items-center justify-center text-slate-600">
+              <div className="w-full h-full flex items-center justify-center text-slate-400 dark:text-slate-600">
                 ไม่มีรูปปก
               </div>
             )}
           </div>
 
-          <button className="w-full flex items-center justify-center gap-2 py-2 rounded-lg border border-slate-700 text-slate-300 hover:bg-slate-800 mb-4">
+          <button className="w-full flex items-center justify-center gap-2 py-2 rounded-lg border border-slate-300 dark:border-slate-700 text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 mb-4">
             <Heart
               size={16}
               className={series.is_favorite ? 'fill-red-400 text-red-400' : ''}
@@ -124,25 +124,25 @@ if (!series) {
         </div>
 
         <div className="mt-6 md:mt-0">
-          <h1 className="text-2xl font-bold text-white mb-1">{title}</h1>
-          {series.title_original && series.title_original !== title && (
-            <p className="text-slate-500 text-sm mb-1">{series.title_original}</p>
-          )}
-          {series.publisher && (
-            <p className="text-slate-400 text-sm mb-4">{series.publisher.name}</p>
-          )}
+<h1 className="text-2xl font-bold text-slate-900 dark:text-white mb-1">{title}</h1>
+{series.title_original && series.title_original !== title && (
+  <p className="text-slate-500 dark:text-slate-500 text-sm mb-1">{series.title_original}</p>
+)}
+{series.publisher && (
+  <p className="text-slate-500 dark:text-slate-400 text-sm mb-4">{series.publisher.name}</p>
+)}
 
-          <div className="w-full h-2 bg-slate-800 rounded-full overflow-hidden mb-2">
+          <div className="w-full h-2 bg-slate-200 dark:bg-slate-800 rounded-full overflow-hidden mb-2">
             <div
               className="h-full bg-emerald-500 rounded-full transition-all"
               style={{ width: `${percent}%` }}
             />
           </div>
-          <p className="text-slate-300 text-sm mb-6">
-            มี {owned} จาก {total} เล่ม ({percent}%)
-          </p>
+<p className="text-slate-700 dark:text-slate-300 text-sm mb-6">
+  มี {owned} จาก {total} เล่ม ({percent}%)
+</p>
 
-          <h2 className="text-lg font-semibold text-white mb-3">รายการเล่ม</h2>
+<h2 className="text-lg font-semibold text-slate-900 dark:text-white mb-3">รายการเล่ม</h2>
           <VolumeChecklist
             volumes={series.volumes ?? []}
             onToggleVolume={handleToggleVolume}
@@ -157,31 +157,31 @@ if (!series) {
           )}
 
           {series.synopsis && (
-            <div className="mt-8">
-              <h2 className="text-lg font-semibold text-white mb-2">เรื่องย่อ</h2>
-              <p className="text-slate-400 text-sm leading-relaxed">
-                {series.synopsis}
-              </p>
-            </div>
-          )}
+  <div className="mt-8">
+    <h2 className="text-lg font-semibold text-slate-900 dark:text-white mb-2">เรื่องย่อ</h2>
+    <p className="text-slate-500 dark:text-slate-400 text-sm leading-relaxed">
+      {series.synopsis}
+    </p>
+  </div>
+)}
 
-          {series.authors && series.authors.length > 0 && (
-            <div className="mt-4">
-              <span className="text-slate-500 text-sm">ผู้แต่ง: </span>
-              <span className="text-slate-300 text-sm">
-                {series.authors.map((a) => a.name).join(', ')}
-              </span>
-            </div>
-          )}
+{series.authors && series.authors.length > 0 && (
+  <div className="mt-4">
+    <span className="text-slate-400 dark:text-slate-500 text-sm">ผู้แต่ง: </span>
+    <span className="text-slate-700 dark:text-slate-300 text-sm">
+      {series.authors.map((a) => a.name).join(', ')}
+    </span>
+  </div>
+)}
 
-          {series.storage_location && (
-            <div className="mt-2">
-              <span className="text-slate-500 text-sm">เก็บไว้ที่: </span>
-              <span className="text-slate-300 text-sm">
-                {series.storage_location}
-              </span>
-            </div>
-          )}
+{series.storage_location && (
+  <div className="mt-2">
+    <span className="text-slate-400 dark:text-slate-500 text-sm">เก็บไว้ที่: </span>
+    <span className="text-slate-700 dark:text-slate-300 text-sm">
+      {series.storage_location}
+    </span>
+  </div>
+)}
         </div>
       </div>
     </div>

@@ -22,11 +22,11 @@ export default function WishlistItemCard({ item }: WishlistItemCardProps) {
   const priority = priorityConfig[item.priority]
 
   return (
-    <div className="flex gap-4 bg-slate-800 rounded-xl p-4 border border-slate-700">
+    <div className="flex gap-4 bg-slate-100 dark:bg-slate-800 rounded-xl p-4 border border-slate-200 dark:border-slate-700">
       {/* ปกเล็กๆ ด้านซ้าย */}
       <Link
         to={`/series/${series.id}`}
-        className="shrink-0 w-16 aspect-[2/3] bg-slate-700 rounded-lg overflow-hidden"
+        className="shrink-0 w-16 aspect-[2/3] bg-slate-200 dark:bg-slate-700 rounded-lg overflow-hidden"
       >
         {series.cover_image_url ? (
           <img
@@ -35,8 +35,7 @@ export default function WishlistItemCard({ item }: WishlistItemCardProps) {
             className="w-full h-full object-cover"
           />
         ) : (
-          <div className="w-full h-full flex items-center justify-center text-slate-600 text-xs">
-            ไม่มีรูป
+     <div className="w-full h-full flex items-center justify-center text-slate-400 dark:text-slate-600 text-xs">
           </div>
         )}
       </Link>
@@ -46,7 +45,7 @@ export default function WishlistItemCard({ item }: WishlistItemCardProps) {
         <div className="flex items-start justify-between gap-2 mb-1">
           <Link
             to={`/series/${series.id}`}
-            className="text-white font-semibold text-sm hover:underline truncate"
+            className="text-slate-900 dark:text-white font-semibold text-sm hover:underline truncate"
           >
             {title}
           </Link>
@@ -57,7 +56,7 @@ export default function WishlistItemCard({ item }: WishlistItemCardProps) {
           </span>
         </div>
 
-        <div className="flex flex-wrap gap-x-4 gap-y-1 text-xs text-slate-400 mt-2">
+        <div className="flex flex-wrap gap-x-4 gap-y-1 text-xs text-slate-500 dark:text-slate-400 mt-2">
           {item.estimated_price !== null && (
             <span>💰 ~{item.estimated_price.toLocaleString()} บาท</span>
           )}
@@ -74,9 +73,9 @@ export default function WishlistItemCard({ item }: WishlistItemCardProps) {
           )}
         </div>
 
-        {item.notes && (
-          <p className="text-slate-500 text-xs mt-2 italic">{item.notes}</p>
-        )}
+{item.notes && (
+  <p className="text-slate-400 dark:text-slate-500 text-xs mt-2 italic">{item.notes}</p>
+)}
       </div>
     </div>
   )

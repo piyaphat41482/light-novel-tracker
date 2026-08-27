@@ -31,12 +31,12 @@ if (error) {
 
   return (
     <div className="p-4 md:p-8">
-      <h1 className="text-2xl font-bold text-white mb-6">Wishlist</h1>
+      <h1 className="text-2xl font-bold text-slate-900 dark:text-white mb-6">Wishlist</h1>
 
       {sortedWishlist.length === 0 ? (
-        <p className="text-slate-400 text-center py-12">
-          ยังไม่มีรายการที่อยากได้ ลองไปกดหัวใจในหน้ารายละเอียดซีรีส์ดูสิ
-        </p>
+<p className="text-slate-400 dark:text-slate-500 text-center py-12">
+  ยังไม่มีรายการที่อยากได้ ลองไปกดหัวใจในหน้ารายละเอียดซีรีส์ดูสิ
+</p>
       ) : (
         <div className="space-y-3 max-w-2xl">
           {sortedWishlist.map((item) => (

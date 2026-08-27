@@ -36,7 +36,7 @@ export default function VolumeChecklist({
 
       {specialVolumes.length > 0 && (
         <div>
-          <p className="text-slate-500 text-xs mb-2">ฉบับพิเศษ</p>
+          <p className="text-slate-400 dark:text-slate-500 text-xs mb-2">ฉบับพิเศษ</p>
           <div className="flex flex-wrap gap-2">
             {specialVolumes.map((volume) => (
               <VolumeItem
