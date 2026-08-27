@@ -59,7 +59,7 @@ if (error) {
 
   return (
     <div className="p-4 md:p-8">
-      <h1 className="text-2xl font-bold text-white mb-6">Dashboard</h1>
+      <h1 className="text-2xl font-bold text-slate-900 dark:text-white mb-6">Dashboard</h1>
 
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3 mb-8">
         <StatCard label="Total Series" value={stats.totalSeries} />
@@ -79,13 +79,11 @@ if (error) {
       </div>
 
       <section>
-        <h2 className="text-lg font-semibold text-white mb-3">
-          Recently Added
-        </h2>
+        <h2 className="text-lg font-semibold text-slate-900 dark:text-white mb-3">Recently Added</h2>
         {recentlyAdded.length === 0 ? (
-          <p className="text-slate-500 text-sm">
-            ยังไม่มีซีรีส์ในคอลเลกชัน ลองเพิ่มซีรีส์แรกดูสิ
-          </p>
+<p className="text-slate-400 dark:text-slate-500 text-sm">
+  ยังไม่มีซีรีส์ในคอลเลกชัน ลองเพิ่มซีรีส์แรกดูสิ
+</p>
         ) : (
 <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
   {recentlyAdded.map((series, index) => (

@@ -36,7 +36,7 @@ export default function FilterSortBar({
     if (value !== null) onMediaFilterChange(value)
   }}
 >
-        <SelectTrigger className="w-36 bg-slate-800 border-slate-700 text-white">
+        <SelectTrigger className="w-36 bg-slate-100 dark:bg-slate-800 border-slate-300 dark:border-slate-700 text-slate-900 dark:text-white">
           <SelectValue placeholder="ประเภท" />
         </SelectTrigger>
         <SelectContent>
@@ -52,7 +52,7 @@ export default function FilterSortBar({
     if (value !== null) onSortByChange(value)
   }}
 >
-        <SelectTrigger className="w-44 bg-slate-800 border-slate-700 text-white">
+        <SelectTrigger className="w-44 bg-slate-100 dark:bg-slate-800 border-slate-300 dark:border-slate-700 text-slate-900 dark:text-white">
           <SelectValue placeholder="เรียงตาม" />
         </SelectTrigger>
         <SelectContent>
@@ -63,9 +63,9 @@ export default function FilterSortBar({
         </SelectContent>
       </Select>
 
-      <span className="text-slate-400 text-sm ml-auto">
-        {resultCount} เรื่อง
-      </span>
+<span className="text-slate-500 dark:text-slate-400 text-sm ml-auto">
+  {resultCount} เรื่อง
+</span>
     </div>
   )
 }
