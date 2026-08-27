@@ -11,19 +11,19 @@ export default function SettingsPage() {
 
   return (
     <div className="p-4 md:p-8 max-w-xl">
-      <h1 className="text-2xl font-bold text-white mb-6">Settings</h1>
+      <h1 className="text-2xl font-bold text-slate-900 dark:text-white mb-6">Settings</h1>
 
       <section className="mb-6">
-        <h2 className="text-slate-400 text-xs font-semibold uppercase tracking-wide mb-3">
+        <h2 className="text-slate-500 dark:text-slate-400 text-xs font-semibold uppercase tracking-wide mb-3">
           การแสดงผล
         </h2>
-        <div className="bg-slate-800 rounded-xl border border-slate-700 divide-y divide-slate-700">
+       <div className="bg-slate-100 dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 divide-y divide-slate-200 dark:divide-slate-700">
           <div className="flex items-center justify-between p-4">
             <div className="flex items-center gap-3">
-              <Moon size={18} className="text-slate-400" />
+              <Moon size={18} className="text-slate-500 dark:text-slate-400" />
               <div>
-                <p className="text-white text-sm font-medium">โหมดมืด</p>
-<p className="text-slate-500 text-xs">
+               <p className="text-slate-900 dark:text-white text-sm font-medium">โหมดมืด</p>
+<p className="text-slate-400 dark:text-slate-500 text-xs">
   ตอนนี้ใช้: {theme === 'dark' ? 'โหมดมืด' : 'โหมดสว่าง'}
 </p>
               </div>
@@ -34,32 +34,32 @@ export default function SettingsPage() {
       </section>
 
       <section className="mb-6">
-        <h2 className="text-slate-400 text-xs font-semibold uppercase tracking-wide mb-3">
+        <h2 className="text-slate-500 dark:text-slate-400 text-xs font-semibold uppercase tracking-wide mb-3">
           ข้อมูล
         </h2>
-        <div className="bg-slate-800 rounded-xl border border-slate-700 divide-y divide-slate-700">
-          <button className="w-full flex items-center gap-3 p-4 text-left hover:bg-slate-750 transition-colors">
-            <Database size={18} className="text-slate-400" />
+        <div className="bg-slate-100 dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 divide-y divide-slate-200 dark:divide-slate-700">
+         <button className="w-full flex items-center gap-3 p-4 text-left hover:bg-slate-200 dark:hover:bg-slate-750 transition-colors">
+            <Database size={18} className="text-slate-500 dark:text-slate-400" />
             <div>
-              <p className="text-white text-sm font-medium">ส่งออกข้อมูล</p>
-              <p className="text-slate-500 text-xs">จะเพิ่มในเวอร์ชันถัดไป</p>
+              <p className="text-slate-900 dark:text-white text-sm font-medium">ส่งออกข้อมูล</p>
+              <p className="text-slate-400 dark:text-slate-500 text-xs">จะเพิ่มในเวอร์ชันถัดไป</p>
             </div>
           </button>
         </div>
       </section>
 
       <section>
-        <h2 className="text-slate-400 text-xs font-semibold uppercase tracking-wide mb-3">
+       <h2 className="text-slate-500 dark:text-slate-400 text-xs font-semibold uppercase tracking-wide mb-3">
           เกี่ยวกับ
         </h2>
-        <div className="bg-slate-800 rounded-xl border border-slate-700 divide-y divide-slate-700">
+       <div className="bg-slate-100 dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 divide-y divide-slate-200 dark:divide-slate-700">
           <div className="flex items-center gap-3 p-4">
-            <Info size={18} className="text-slate-400" />
+            <Info size={18} className="text-slate-500 dark:text-slate-400" />
             <div>
-              <p className="text-white text-sm font-medium">
+              <p className="text-slate-900 dark:text-white text-sm font-medium">
                 Light Novel & Manga Tracker
               </p>
-              <p className="text-slate-500 text-xs">เวอร์ชัน 0.1.0 (กำลังพัฒนา)</p>
+              <p className="text-slate-400 dark:text-slate-500 text-xs">เวอร์ชัน 0.1.0 (กำลังพัฒนา)</p>
             </div>
           </div>
           
@@ -67,10 +67,10 @@ export default function SettingsPage() {
             href="https://github.com"
             target="_blank"
             rel="noopener noreferrer"
-            className="flex items-center gap-3 p-4 hover:bg-slate-750 transition-colors"
+            className="w-full flex items-center gap-3 p-4 text-left hover:bg-slate-200 dark:hover:bg-slate-750 transition-colors"
           >
-            <ExternalLink size={18} className="text-slate-400" />
-            <p className="text-white text-sm font-medium">ซอร์สโค้ดบน GitHub</p>
+            <ExternalLink size={18} className="text-slate-500 dark:text-slate-400" />
+           <p className="text-slate-900 dark:text-white text-sm font-medium">ซอร์สโค้ดบน GitHub</p>
           </a>
         </div>
       </section>

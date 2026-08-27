@@ -34,7 +34,7 @@ if (error) {
   if (series.length === 0) {
     return (
       <div className="p-4 md:p-8">
-        <h1 className="text-2xl font-bold text-white mb-6">Statistics</h1>
+        <h1 className="text-2xl font-bold text-slate-900 dark:text-white mb-6">Statistics</h1>
         <p className="text-slate-400">
           ยังไม่มีข้อมูลในคอลเลกชัน ลองเพิ่มซีรีส์ก่อนเพื่อดูสถิติ
         </p>

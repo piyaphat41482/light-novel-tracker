@@ -68,9 +68,9 @@ export default function EditSeriesPage() {
 
   return (
     <div className="p-4 md:p-8">
-      <h1 className="text-2xl font-bold text-white mb-6">
-        แก้ไข: {series.title_english || series.title_original}
-      </h1>
+<h1 className="text-2xl font-bold text-slate-900 dark:text-white mb-6">
+  แก้ไข: {series.title_english || series.title_original}
+</h1>
 
       {mutation.isError && (
         <div className="mb-4 p-3 bg-red-500/10 border border-red-500/30 rounded-lg text-red-400 text-sm">

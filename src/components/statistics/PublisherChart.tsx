@@ -23,8 +23,8 @@ const COLORS = ['#10b981', '#3b82f6', '#f59e0b', '#ef4444', '#8b5cf6', '#ec4899'
 
 export default function PublisherChart({ data }: PublisherChartProps) {
   return (
-    <div className="bg-slate-800 rounded-xl p-4 border border-slate-700">
-      <h3 className="text-white font-semibold mb-4">สัดส่วนตามสำนักพิมพ์</h3>
+ <div className="bg-slate-100 dark:bg-slate-800 rounded-xl p-4 border border-slate-200 dark:border-slate-700">
+  <h3 className="text-slate-900 dark:text-white font-semibold mb-4">สัดส่วนตามสำนักพิมพ์</h3>
       <ResponsiveContainer width="100%" height={250}>
         <PieChart>
           <Pie

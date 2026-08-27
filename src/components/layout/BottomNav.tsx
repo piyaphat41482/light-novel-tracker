@@ -15,7 +15,7 @@ const navItems = [
 
 export default function BottomNav() {
   return (
-    <nav className="md:hidden fixed bottom-0 inset-x-0 bg-slate-950 border-t border-slate-800 flex justify-around py-2 z-50">
+   <nav className="md:hidden fixed bottom-0 inset-x-0 bg-white dark:bg-slate-950 border-t border-slate-200 dark:border-slate-800 flex justify-around py-2 z-50">
       {navItems.map(({ to, label, icon: Icon }) => (
         <NavLink
           key={to}
@@ -24,7 +24,7 @@ export default function BottomNav() {
           className={({ isActive }) =>
             cn(
               'flex flex-col items-center gap-1 px-3 py-1 rounded-lg text-xs transition-colors',
-              isActive ? 'text-white' : 'text-slate-500'
+              isActive ? 'text-slate-900 dark:text-white' : 'text-slate-400 dark:text-slate-500'
             )
           }
         >

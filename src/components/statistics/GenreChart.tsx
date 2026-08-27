@@ -24,8 +24,8 @@ const COLORS = ['#ec4899', '#8b5cf6', '#3b82f6', '#10b981', '#f59e0b']
 
 export default function GenreChart({ data, title }: GenreChartProps) {
   return (
-    <div className="bg-slate-800 rounded-xl p-4 border border-slate-700">
-      <h3 className="text-white font-semibold mb-4">{title}</h3>
+<div className="bg-slate-100 dark:bg-slate-800 rounded-xl p-4 border border-slate-200 dark:border-slate-700">
+  <h3 className="text-slate-900 dark:text-white font-semibold mb-4">{title}</h3>
       <ResponsiveContainer width="100%" height={250}>
         <PieChart>
           <Pie

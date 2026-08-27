@@ -22,8 +22,8 @@ interface CompletionChartProps {
 
 export default function CompletionChart({ data }: CompletionChartProps) {
   return (
-    <div className="bg-slate-800 rounded-xl p-4 border border-slate-700">
-      <h3 className="text-white font-semibold mb-4">เล่มที่มีแล้ว vs ยังขาด</h3>
+<div className="bg-slate-100 dark:bg-slate-800 rounded-xl p-4 border border-slate-200 dark:border-slate-700">
+  <h3 className="text-slate-900 dark:text-white font-semibold mb-4">เล่มที่มีแล้ว vs ยังขาด</h3>
       <ResponsiveContainer width="100%" height={250}>
         <BarChart data={data}>
           <CartesianGrid strokeDasharray="3 3" stroke="#334155" />
