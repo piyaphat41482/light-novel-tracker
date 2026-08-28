@@ -14,6 +14,7 @@ import {
 import ErrorState from '@/components/ui/error-state'
 import { Skeleton } from '@/components/ui/skeleton'
 import VolumeChecklist from '@/components/series/VolumeChecklist'
+import { toggleFavorite } from '@/lib/mutations/favorites'
 
 export default function SeriesDetailPage() {
   const { id } = useParams<{ id: string }>()
@@ -61,6 +62,10 @@ export default function SeriesDetailPage() {
       navigate('/collection')
     },
   })
+  const favoriteMutation = useMutation({
+  mutationFn: (newValue: boolean) => toggleFavorite(id!, newValue),
+  onSuccess: () => queryClient.invalidateQueries({ queryKey: ['series'] }),
+})
 
   if (isLoading) {
     return (
@@ -168,13 +173,16 @@ export default function SeriesDetailPage() {
             )}
           </div>
 
-          <button className="w-full flex items-center justify-center gap-2 py-2 rounded-lg border border-slate-300 dark:border-slate-700 text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 mb-4">
-            <Heart
-              size={16}
-              className={series.is_favorite ? 'fill-red-400 text-red-400' : ''}
-            />
-            {series.is_favorite ? 'อยู่ในรายการโปรด' : 'เพิ่มในรายการโปรด'}
-          </button>
+<button
+  onClick={() => favoriteMutation.mutate(!series.is_favorite)}
+  className="w-full flex items-center justify-center gap-2 py-2 rounded-lg border border-slate-300 dark:border-slate-700 text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 mb-4"
+>
+  <Heart
+    size={16}
+    className={series.is_favorite ? 'fill-red-400 text-red-400' : ''}
+  />
+  {series.is_favorite ? 'อยู่ในรายการโปรด' : 'เพิ่มในรายการโปรด'}
+</button>
         </div>
 
         <div className="mt-6 md:mt-0">

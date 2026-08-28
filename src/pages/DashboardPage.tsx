@@ -56,7 +56,7 @@ if (error) {
         new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
     )
     .slice(0, 5)
-
+const favoriteSeries = series.filter((s) => s.is_favorite)
   return (
     <div className="p-4 md:p-8">
       <h1 className="text-2xl font-bold text-slate-900 dark:text-white mb-6">Dashboard</h1>
@@ -98,6 +98,18 @@ if (error) {
 </div>
         )}
       </section>
+      {favoriteSeries.length > 0 && (
+  <section className="mt-8">
+    <h2 className="text-lg font-semibold text-slate-900 dark:text-white mb-3">
+      ❤️ รายการโปรด
+    </h2>
+    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
+      {favoriteSeries.map((series) => (
+        <SeriesCard key={series.id} series={series} />
+      ))}
+    </div>
+  </section>
+)}
     </div>
   )
 }
