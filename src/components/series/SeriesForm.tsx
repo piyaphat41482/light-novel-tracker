@@ -167,7 +167,31 @@ export default function SeriesForm({
           <p className="text-red-400 text-sm">{errors.latest_volume.message}</p>
         )}
       </div>
+      {/* สำนักพิมพ์ */}
+      <div className="space-y-2">
+        <Label htmlFor="publisher_name" className={labelClass}>
+          สำนักพิมพ์
+        </Label>
+        <Input
+          id="publisher_name"
+          className={inputClass}
+          placeholder="เช่น Kadokawa"
+          {...register('publisher_name')}
+        />
+      </div>
 
+      {/* ผู้แต่ง */}
+      <div className="space-y-2">
+        <Label htmlFor="author_names" className={labelClass}>
+          ผู้แต่ง
+        </Label>
+        <Input
+          id="author_names"
+          className={inputClass}
+          placeholder="ถ้ามีหลายคน คั่นด้วยจุลภาค เช่น Asato Asato, คนอื่น"
+          {...register('author_names')}
+        />
+      </div>
       {/* เรื่องย่อ */}
       <div className="space-y-2">
         <Label htmlFor="synopsis" className={labelClass}>

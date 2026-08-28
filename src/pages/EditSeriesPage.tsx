@@ -69,21 +69,23 @@ export default function EditSeriesPage() {
     )
   }
 
-  const defaultValues: SeriesFormValues = {
-    title_original: series.title_original ?? '',
-    title_english: series.title_english ?? '',
-    title_thai: series.title_thai ?? '',
-    media_type: series.media_type,
-    publication_status: series.publication_status,
-    reading_status: series.reading_status,
-    latest_volume: series.latest_volume ?? undefined,
-    synopsis: series.synopsis ?? '',
-    cover_image_url: series.cover_image_url ?? '',
-    storage_location: series.storage_location ?? '',
-    notes: series.notes ?? '',
-    is_favorite: series.is_favorite,
-    is_wishlist: series.is_wishlist,
-  }
+ const defaultValues: SeriesFormValues = {
+  title_original: series.title_original ?? '',
+  title_english: series.title_english ?? '',
+  title_thai: series.title_thai ?? '',
+  media_type: series.media_type,
+  publisher_name: series.publisher?.name ?? '',
+  author_names: series.authors?.map((a) => a.name).join(', ') ?? '',
+  publication_status: series.publication_status,
+  reading_status: series.reading_status,
+  latest_volume: series.latest_volume ?? undefined,
+  synopsis: series.synopsis ?? '',
+  cover_image_url: series.cover_image_url ?? '',
+  storage_location: series.storage_location ?? '',
+  notes: series.notes ?? '',
+  is_favorite: series.is_favorite,
+  is_wishlist: series.is_wishlist,
+}
 
   function handleSubmit(values: SeriesFormValues) {
     mutation.mutate(values)

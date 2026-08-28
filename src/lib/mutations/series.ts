@@ -21,10 +21,87 @@ function prepareSeriesPayload(values: SeriesFormValues) {
     is_wishlist: values.is_wishlist,
   }
 }
+// หาสำนักพิมพ์ที่มีชื่อตรงกัน ถ้าไม่มีให้สร้างใหม่ คืนค่า id กลับมา
+async function findOrCreatePublisher(name: string): Promise<string> {
+  const trimmed = name.trim()
 
+  const { data: existing } = await supabase
+    .from('publishers')
+    .select('id')
+    .eq('name', trimmed)
+    .maybeSingle()
+
+  if (existing) return existing.id
+
+  const { data: created, error } = await supabase
+    .from('publishers')
+    .insert({ name: trimmed })
+    .select('id')
+    .single()
+
+  if (error) throw new Error(error.message)
+  return created.id
+}
+
+// หาผู้แต่งที่มีชื่อตรงกัน ถ้าไม่มีให้สร้างใหม่ คืนค่า id กลับมา
+async function findOrCreateAuthor(name: string): Promise<string> {
+  const trimmed = name.trim()
+
+  const { data: existing } = await supabase
+    .from('authors')
+    .select('id')
+    .eq('name', trimmed)
+    .maybeSingle()
+
+  if (existing) return existing.id
+
+  const { data: created, error } = await supabase
+    .from('authors')
+    .insert({ name: trimmed })
+    .select('id')
+    .single()
+
+  if (error) throw new Error(error.message)
+  return created.id
+}
+
+// อัปเดตความสัมพันธ์ series ↔ authors ทั้งหมด
+// ลบของเดิมทิ้งก่อนแล้วสร้างใหม่ทั้งชุด (ง่ายและปลอดภัยกว่าคำนวณว่าอันไหนเพิ่ม/ลบ)
+async function syncSeriesAuthors(
+  seriesId: string,
+  authorNames: string[]
+): Promise<void> {
+  const { error: deleteError } = await supabase
+    .from('series_authors')
+    .delete()
+    .eq('series_id', seriesId)
+  if (deleteError) throw new Error(deleteError.message)
+
+  if (authorNames.length === 0) return
+
+  const authorIds = await Promise.all(authorNames.map(findOrCreateAuthor))
+  const rows = authorIds.map((authorId) => ({
+    series_id: seriesId,
+    author_id: authorId,
+  }))
+
+  const { error: insertError } = await supabase
+    .from('series_authors')
+    .insert(rows)
+  if (insertError) throw new Error(insertError.message)
+}
 // สร้างซีรีส์ใหม่ พร้อมสร้างเล่ม 1 ถึง latest_volume ให้อัตโนมัติ (ทั้งหมดเป็น "ยังไม่มี")
 export async function createSeries(values: SeriesFormValues): Promise<string> {
-  const payload = prepareSeriesPayload(values)
+  // หาหรือสร้างสำนักพิมพ์ก่อน (ถ้ามีการกรอก)
+  let publisherId: string | null = null
+  if (values.publisher_name && values.publisher_name.trim()) {
+    publisherId = await findOrCreatePublisher(values.publisher_name)
+  }
+
+  const payload = {
+    ...prepareSeriesPayload(values),
+    publisher_id: publisherId,
+  }
 
   const { data: newSeries, error: seriesError } = await supabase
     .from('series')
@@ -34,7 +111,6 @@ export async function createSeries(values: SeriesFormValues): Promise<string> {
 
   if (seriesError) throw new Error(seriesError.message)
 
-  // ถ้ากรอกจำนวนเล่มไว้ ให้สร้างเล่ม 1..N อัตโนมัติ
   if (values.latest_volume && values.latest_volume > 0) {
     const volumesToInsert = Array.from(
       { length: values.latest_volume },
@@ -52,6 +128,17 @@ export async function createSeries(values: SeriesFormValues): Promise<string> {
     if (volumesError) throw new Error(volumesError.message)
   }
 
+  // เชื่อมผู้แต่ง (ถ้ามีการกรอก)
+  if (values.author_names && values.author_names.trim()) {
+    const names = values.author_names
+      .split(',')
+      .map((n) => n.trim())
+      .filter(Boolean)
+    if (names.length > 0) {
+      await syncSeriesAuthors(newSeries.id, names)
+    }
+  }
+
   return newSeries.id
 }
 
@@ -60,11 +147,24 @@ export async function updateSeries(
   id: string,
   values: SeriesFormValues
 ): Promise<void> {
-  const payload = prepareSeriesPayload(values)
+  let publisherId: string | null = null
+  if (values.publisher_name && values.publisher_name.trim()) {
+    publisherId = await findOrCreatePublisher(values.publisher_name)
+  }
+
+  const payload = {
+    ...prepareSeriesPayload(values),
+    publisher_id: publisherId,
+  }
 
   const { error } = await supabase.from('series').update(payload).eq('id', id)
-
   if (error) throw new Error(error.message)
+
+  const names = (values.author_names ?? '')
+    .split(',')
+    .map((n) => n.trim())
+    .filter(Boolean)
+  await syncSeriesAuthors(id, names)
 }
 
 // เช็คว่าถ้าปรับ latest_volume ใหม่ ต้องสร้างเล่มเพิ่มไหม

@@ -11,6 +11,8 @@ const emptyDefaults: SeriesFormValues = {
   title_english: '',
   title_thai: '',
   media_type: 'light_novel',
+  publisher_name: '',
+  author_names: '',
   publication_status: 'ongoing',
   reading_status: 'not_started',
   synopsis: '',

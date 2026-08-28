@@ -243,6 +243,14 @@ export default function SeriesDetailPage() {
               </span>
             </div>
           )}
+          {series.notes && (
+  <div className="mt-4">
+    <h2 className="text-lg font-semibold text-slate-900 dark:text-white mb-2">โน้ตส่วนตัว</h2>
+    <p className="text-slate-500 dark:text-slate-400 text-sm leading-relaxed whitespace-pre-wrap">
+      {series.notes}
+    </p>
+  </div>
+)}
         </div>
       </div>
     </div>

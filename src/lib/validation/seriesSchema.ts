@@ -26,6 +26,8 @@ export const seriesFormSchema = z
       .or(z.literal('')), // อนุญาตให้เป็นค่าว่างได้ด้วย (ยังไม่ใส่รูป)
     storage_location: z.string().optional(),
     notes: z.string().optional(),
+        publisher_name: z.string().optional(),
+    author_names: z.string().optional(), // คั่นหลายคนด้วยจุลภาค เช่น "Asato Asato, คนอื่น"
     is_favorite: z.boolean(),
     is_wishlist: z.boolean(),
   })
