@@ -52,8 +52,8 @@ export interface Series {
 
 export interface WishlistItem {
   id: string
-  series_id: string
-  series?: Series // ข้อมูลซีรีส์ที่ join มาด้วย
+  title: string
+  media_type: MediaType
   priority: WishlistPriority
   estimated_price: number | null
   preferred_store: string | null

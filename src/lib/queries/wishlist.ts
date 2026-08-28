@@ -1,4 +1,4 @@
-// ฟังก์ชันดึงข้อมูล wishlist จาก Supabase พร้อม join ข้อมูล series ที่เกี่ยวข้อง
+// ฟังก์ชันดึงข้อมูล wishlist จาก Supabase - ตอนนี้เป็นข้อมูลอิสระ ไม่ต้อง join กับ series แล้ว
 
 import { supabase } from '@/lib/supabase'
 import type { WishlistItem } from '@/types/database'
@@ -6,17 +6,22 @@ import type { WishlistItem } from '@/types/database'
 export async function fetchWishlist(): Promise<WishlistItem[]> {
   const { data, error } = await supabase
     .from('wishlist_items')
-    .select(`
-      *,
-      series:series(
-        id, title_original, title_english, title_thai,
-        media_type, cover_image_url,
-        publisher:publishers(id, name)
-      )
-    `)
+    .select('*')
     .order('created_at', { ascending: false })
 
   if (error) throw new Error(error.message)
+  return data ?? []
+}
 
-  return (data ?? []) as unknown as WishlistItem[]
+export async function fetchWishlistItemById(
+  id: string
+): Promise<WishlistItem | null> {
+  const { data, error } = await supabase
+    .from('wishlist_items')
+    .select('*')
+    .eq('id', id)
+    .maybeSingle()
+
+  if (error) throw new Error(error.message)
+  return data
 }

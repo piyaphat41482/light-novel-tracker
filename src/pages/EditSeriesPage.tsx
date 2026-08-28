@@ -1,9 +1,9 @@
-// หน้าแก้ไขซีรีส์ - บันทึกลง Supabase จริงแล้ว
+// หน้าแก้ไขซีรีส์ - บันทึกลง Supabase จริง พร้อม sync จำนวนเล่มอัตโนมัติเมื่อแก้ latest_volume
 
 import { useParams, useNavigate, Link } from 'react-router-dom'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { fetchSeriesById } from '@/lib/queries/series'
-import { updateSeries } from '@/lib/mutations/series'
+import { updateSeries, syncVolumesWithLatestVolume } from '@/lib/mutations/series'
 import SeriesForm from '@/components/series/SeriesForm'
 import type { SeriesFormValues } from '@/lib/validation/seriesSchema'
 
@@ -23,23 +23,46 @@ export default function EditSeriesPage() {
   })
 
   const mutation = useMutation({
-    mutationFn: (values: SeriesFormValues) => updateSeries(id!, values),
-    onSuccess: () => {
-      // invalidate ทั้ง cache ของ list และของหน้า detail เรื่องนี้โดยเฉพาะ
+    mutationFn: async (values: SeriesFormValues) => {
+      await updateSeries(id!, values)
+
+      // ถ้ามีการตั้งค่า latest_volume ไว้ ให้ sync จำนวนเล่มให้ตรงกัน
+      if (values.latest_volume) {
+        const result = await syncVolumesWithLatestVolume(id!, values.latest_volume)
+        return result
+      }
+      return { added: 0, removed: 0, keptOwned: 0 }
+    },
+    onSuccess: (result) => {
       queryClient.invalidateQueries({ queryKey: ['series'] })
+
+      if (result.added > 0) {
+        alert(`อัปเดตสำเร็จ! เพิ่มเล่มใหม่ ${result.added} เล่มให้อัตโนมัติ`)
+      } else if (result.removed > 0 && result.keptOwned > 0) {
+        alert(
+          `อัปเดตสำเร็จ! ลบเล่มส่วนเกินที่ยังไม่มีออก ${result.removed} เล่ม (เก็บเล่ม ${result.keptOwned} เล่มที่คุณมีอยู่แล้วไว้ตามเดิม)`
+        )
+      } else if (result.removed > 0) {
+        alert(`อัปเดตสำเร็จ! ลบเล่มส่วนเกินที่ยังไม่มีออก ${result.removed} เล่ม`)
+      } else if (result.keptOwned > 0) {
+        alert(
+          `อัปเดตสำเร็จ! (มีเล่มที่คุณเคยติ๊กว่าเป็นเจ้าของไว้เกินจากจำนวนที่ตั้งใหม่ ${result.keptOwned} เล่ม ระบบไม่ลบให้อัตโนมัติ)`
+        )
+      }
+
       navigate(`/series/${id}`)
     },
   })
 
   if (isLoading) {
-    return <div className="p-8 text-slate-400">กำลังโหลดข้อมูล...</div>
+    return <div className="p-8 text-slate-500 dark:text-slate-400">กำลังโหลดข้อมูล...</div>
   }
 
   if (fetchError || !series) {
     return (
       <div className="p-8 text-center">
-        <p className="text-slate-400 mb-4">ไม่พบซีรีส์ที่ต้องการแก้ไข</p>
-        <Link to="/collection" className="text-emerald-400 hover:underline">
+        <p className="text-slate-400 dark:text-slate-500 mb-4">ไม่พบซีรีส์ที่ต้องการแก้ไข</p>
+        <Link to="/collection" className="text-emerald-500 dark:text-emerald-400 hover:underline">
           กลับไปหน้า Collection
         </Link>
       </div>
@@ -68,9 +91,9 @@ export default function EditSeriesPage() {
 
   return (
     <div className="p-4 md:p-8">
-<h1 className="text-2xl font-bold text-slate-900 dark:text-white mb-6">
-  แก้ไข: {series.title_english || series.title_original}
-</h1>
+      <h1 className="text-2xl font-bold text-slate-900 dark:text-white mb-6">
+        แก้ไข: {series.title_english || series.title_original}
+      </h1>
 
       {mutation.isError && (
         <div className="mb-4 p-3 bg-red-500/10 border border-red-500/30 rounded-lg text-red-400 text-sm">

@@ -66,3 +66,81 @@ export async function updateSeries(
 
   if (error) throw new Error(error.message)
 }
+
+// เช็คว่าถ้าปรับ latest_volume ใหม่ ต้องสร้างเล่มเพิ่มไหม
+// คืนค่าจำนวนเล่มที่ "จะถูกสร้างเพิ่ม" (0 ถ้าไม่ต้องทำอะไร)
+// เช็คว่าถ้าปรับ latest_volume ใหม่ ต้องสร้างเล่มเพิ่มหรือลบเล่มส่วนเกินไหม
+// กฎ: เพิ่มเล่มใหม่ได้เสมอ / ลบได้เฉพาะเล่มส่วนเกินที่ยังไม่เคย mark ว่า owned เท่านั้น (ปลอดภัย ไม่เสียข้อมูล)
+export async function syncVolumesWithLatestVolume(
+  seriesId: string,
+  newLatestVolume: number
+): Promise<{ added: number; removed: number; keptOwned: number }> {
+  const { data: existingVolumes, error: fetchError } = await supabase
+    .from('volumes')
+    .select('id, volume_number, is_owned')
+    .eq('series_id', seriesId)
+    .eq('is_special_edition', false)
+
+  if (fetchError) throw new Error(fetchError.message)
+
+  const volumes = existingVolumes ?? []
+  const existingNumbers = new Set(volumes.map((v) => Number(v.volume_number)))
+  const currentMax = existingNumbers.size > 0 ? Math.max(...existingNumbers) : 0
+
+  let added = 0
+  let removed = 0
+  let keptOwned = 0
+
+  // กรณีเพิ่มจำนวน: สร้างเล่มใหม่ที่ยังไม่มี
+  if (newLatestVolume > currentMax) {
+    const volumesToAdd = []
+    for (let i = currentMax + 1; i <= newLatestVolume; i++) {
+      if (!existingNumbers.has(i)) {
+        volumesToAdd.push({
+          series_id: seriesId,
+          volume_number: String(i),
+          is_owned: false,
+        })
+      }
+    }
+    if (volumesToAdd.length > 0) {
+      const { error: insertError } = await supabase
+        .from('volumes')
+        .insert(volumesToAdd)
+      if (insertError) throw new Error(insertError.message)
+      added = volumesToAdd.length
+    }
+  }
+
+  // กรณีลดจำนวน: หาเล่มที่เลขเกิน newLatestVolume มา แล้วแยกว่าลบได้ไหม
+  if (newLatestVolume < currentMax) {
+    const excessVolumes = volumes.filter(
+      (v) => Number(v.volume_number) > newLatestVolume
+    )
+
+    const safeToDelete = excessVolumes.filter((v) => !v.is_owned)
+    const mustKeep = excessVolumes.filter((v) => v.is_owned)
+
+    if (safeToDelete.length > 0) {
+      const { error: deleteError } = await supabase
+        .from('volumes')
+        .delete()
+        .in(
+          'id',
+          safeToDelete.map((v) => v.id)
+        )
+      if (deleteError) throw new Error(deleteError.message)
+      removed = safeToDelete.length
+    }
+
+    keptOwned = mustKeep.length
+  }
+
+  return { added, removed, keptOwned }
+}
+// ลบซีรีส์ทั้งเรื่อง — cascade delete จะลบ volumes, wishlist_items,
+// series_authors ฯลฯ ที่เกี่ยวข้องให้อัตโนมัติ (ตั้งค่าไว้ตั้งแต่ Phase 3)
+export async function deleteSeries(id: string): Promise<void> {
+  const { error } = await supabase.from('series').delete().eq('id', id)
+  if (error) throw new Error(error.message)
+}

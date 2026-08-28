@@ -16,6 +16,8 @@ const EditSeriesPage = lazy(() => import('@/pages/EditSeriesPage'))
 const WishlistPage = lazy(() => import('@/pages/WishlistPage'))
 const StatisticsPage = lazy(() => import('@/pages/StatisticsPage'))
 const SettingsPage = lazy(() => import('@/pages/SettingsPage'))
+const AddWishlistPage = lazy(() => import('@/pages/AddWishlistPage'))
+const EditWishlistPage = lazy(() => import('@/pages/EditWishlistPage'))
 
 // ตัว fallback ง่ายๆ ที่โชว์ระหว่างรอโหลดไฟล์ของหน้านั้น (ปกติเร็วมาก อาจไม่ทันเห็นด้วยซ้ำ)
 function PageLoading() {
@@ -40,6 +42,9 @@ function App() {
           <Route path="wishlist" element={<WishlistPage />} />
           <Route path="statistics" element={<StatisticsPage />} />
           <Route path="settings" element={<SettingsPage />} />
+          <Route path="wishlist" element={<WishlistPage />} />
+<Route path="wishlist/new" element={<AddWishlistPage />} />
+<Route path="wishlist/:id/edit" element={<EditWishlistPage />} />
         </Route>
       </Routes>
     </Suspense>
