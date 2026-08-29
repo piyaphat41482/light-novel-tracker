@@ -38,11 +38,11 @@ export default function CollectionPage() {
 
     const sorted = [...result].sort((a, b) => {
       switch (sortBy) {
-        case 'title': {
-          const titleA = a.title_english || a.title_original || ''
-          const titleB = b.title_english || b.title_original || ''
-          return titleA.localeCompare(titleB)
-        }
+case 'title': {
+  const titleA = a.title_thai || a.title_english || a.title_original || ''
+  const titleB = b.title_thai || b.title_english || b.title_original || ''
+  return titleA.localeCompare(titleB)
+}
         case 'recently_updated':
           return (
             new Date(b.updated_at).getTime() -

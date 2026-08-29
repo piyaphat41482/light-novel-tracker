@@ -18,7 +18,7 @@ export default function SeriesCard({ series }: SeriesCardProps) {
   const owned = countOwnedVolumes(series)
   const total = countTotalVolumes(series)
   const percent = calculateCompletionPercent(series)
-  const title = series.title_english || series.title_original || series.title_thai
+const title = series.title_thai || series.title_english || series.title_original
 
   return (
     <motion.div

@@ -12,7 +12,7 @@ export default function SearchResultItem({ series }: SearchResultItemProps) {
   const owned = countOwnedVolumes(series)
   const total = countTotalVolumes(series)
   const isComplete = total > 0 && owned === total
-  const title = series.title_english || series.title_original || series.title_thai
+  const title = series.title_thai || series.title_english || series.title_original
   const emoji = series.media_type === 'manga' ? '📗' : '📕'
 
   return (
